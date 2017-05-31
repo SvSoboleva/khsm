@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -21,9 +22,10 @@ ActiveRecord::Schema.define(version: 20160610145015) do
     t.integer  "d"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.index ["game_id"], name: "index_game_questions_on_game_id"
-    t.index ["question_id"], name: "index_game_questions_on_question_id"
   end
+
+  add_index "game_questions", ["game_id"], name: "index_game_questions_on_game_id"
+  add_index "game_questions", ["question_id"], name: "index_game_questions_on_question_id"
 
   create_table "games", force: :cascade do |t|
     t.integer  "user_id"
@@ -33,8 +35,9 @@ ActiveRecord::Schema.define(version: 20160610145015) do
     t.integer  "prize",         default: 0, null: false
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
-    t.index ["user_id"], name: "index_games_on_user_id"
   end
+
+  add_index "games", ["user_id"], name: "index_games_on_user_id"
 
   create_table "questions", force: :cascade do |t|
     t.integer  "level",      null: false
@@ -45,8 +48,9 @@ ActiveRecord::Schema.define(version: 20160610145015) do
     t.string   "answer4"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["level"], name: "index_questions_on_level"
   end
+
+  add_index "questions", ["level"], name: "index_questions_on_level"
 
   create_table "users", force: :cascade do |t|
     t.string   "name",                                   null: false
@@ -59,8 +63,9 @@ ActiveRecord::Schema.define(version: 20160610145015) do
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
 end

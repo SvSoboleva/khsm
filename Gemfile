@@ -1,12 +1,6 @@
 source 'https://rubygems.org'
 
-git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
-  "https://github.com/#{repo_name}.git"
-end
-
-gem 'rails', '~> 5.0.2'
-gem 'puma', '~> 3.0'
+gem 'rails', '~> 4.2.6'
 
 gem 'devise', '~> 4.1.1'
 gem 'devise-i18n'
@@ -21,6 +15,9 @@ gem 'russian'
 group :development, :test do
   gem 'sqlite3'
   gem 'byebug'
+  gem 'rspec-rails', '~> 3.4'
+  gem 'factory_girl_rails'
+  gem 'shoulda-matchers'
 end
 
 group :production do
@@ -29,14 +26,3 @@ group :production do
   gem 'rails_12factor'
   gem 'pg'
 end
-
-group :development do
-  # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
-  gem 'listen', '~> 3.0.5'
-end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-gem 'therubyracer'
