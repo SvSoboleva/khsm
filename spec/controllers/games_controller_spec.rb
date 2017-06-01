@@ -26,6 +26,33 @@ RSpec.describe GamesController, type: :controller do
       expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
       expect(flash[:alert]).to be # во flash должен быть прописана ошибка
     end
+
+    it 'kick #create from #show ' do
+      # вызываем экшен
+      post :create, id: game_w_questions.id
+      # проверяем ответ
+      expect(response.status).not_to eq(200) # статус не 200 ОК
+      expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
+      expect(flash[:alert]).to be # во flash должен быть прописана ошибка
+    end
+
+    it 'kick #take_money from #show ' do
+      # вызываем экшен
+      put :take_money, id: game_w_questions.id
+      # проверяем ответ
+      expect(response.status).not_to eq(200) # статус не 200 ОК
+      expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
+      expect(flash[:alert]).to be # во flash должен быть прописана ошибка
+    end
+
+    it 'kick #answer from #show ' do
+      # вызываем экшен
+      put :answer, id: game_w_questions.id
+      # проверяем ответ
+      expect(response.status).not_to eq(200) # статус не 200 ОК
+      expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
+      expect(flash[:alert]).to be # во flash должен быть прописана ошибка
+    end
   end
 
   # группа тестов на экшены контроллера, доступных залогиненным юзерам
@@ -72,6 +99,17 @@ RSpec.describe GamesController, type: :controller do
       expect(flash.empty?).to be_truthy # удачный ответ не заполняет flash
     end
 
+    it 'answers incorrect' do
+      # передаем параметр params[:letter]
+      correct_key = game_w_questions.current_game_question.correct_answer_key
+      l = (['a', 'b', 'c', 'd'] - correct_key.scan(/\w/)).sample
+      put :answer, id: game_w_questions.id, letter: l
+      game = assigns(:game)
+
+      expect(game.finished?).to be_truthy
+      expect(response).to redirect_to(user_path(user))
+      expect(flash.empty?).to be_falsey
+    end
 
     #----------- Вариант решения ДЗ ---------------------------------
 
