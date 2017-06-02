@@ -114,7 +114,6 @@ class Game < ActiveRecord::Base
     # правильно ли ответили на текущий вопрос.
     if current_game_question.answer_correct?(letter)
       # Если ответили правильно, увеличиваем текущий уровень вопроса.
-      self.current_level += 1
 
       if current_level == Question::QUESTION_LEVELS.max
         # Если это был последний вопрос, заканчиваем игру методом finish_game!
@@ -124,6 +123,7 @@ class Game < ActiveRecord::Base
         save!
       end
 
+      self.current_level += 1
       # Возвращаем true, если ответ был правильным
       true
     else

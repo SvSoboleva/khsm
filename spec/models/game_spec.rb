@@ -90,13 +90,14 @@ RSpec.describe Game, type: :model do
     end
 
     it 'correct .current_game_question' do
-      q = game_w_questions.current_game_question
+      game_w_questions.current_level = 5
+      q = game_w_questions[5]
       expect(game_w_questions.current_game_question).to eq(q)
     end
 
     it 'correct .previous_level' do
-      level = game_w_questions.current_level
-      expect(game_w_questions.previous_level).to eq(level-1)
+      game_w_questions.current_level = 5
+      expect(game_w_questions.previous_level).to eq(4)
     end
   end
 
@@ -134,28 +135,27 @@ RSpec.describe Game, type: :model do
 
   context 'answer to the current question' do
    it 'right answer' do
-     q = game_w_questions.current_game_question
-     expect(game_w_questions.answer_current_question!(q.correct_answer_key)).to be_truthy
+     expect(game_w_questions.answer_current_question!('d')).to be_truthy
+     expect(game_w_questions.status).to eq(:in_progress)
    end
 
    it 'wrong answer' do
-     q = game_w_questions.current_game_question
-     expect(game_w_questions.answer_current_question!(q.answer_correct?('a'))).to be_falsey
+     expect(game_w_questions.answer_current_question!('a')).to be_falsey
+     expect(game_w_questions.status).to eq(:fail)
    end
 
    it 'question in a million' do
-     game_w_questions.current_level = Question::QUESTION_LEVELS.max - 1
-     q = game_w_questions.current_game_question
-     game_w_questions.answer_current_question!(q.correct_answer_key)
-     expect(game_w_questions.finished?).to be_truthy
+     game_w_questions.current_level = Question::QUESTION_LEVELS.max
+     game_w_questions.answer_current_question!('d')
+     expect(game_w_questions.status).to eq(:won)
      expect(game_w_questions.prize).to be > 0
    end
 
    it 'answer in timeout' do
      game_w_questions.finished_at = Time.now
      game_w_questions.created_at = 1.hour.ago
-     q = game_w_questions.current_game_question
-     expect(game_w_questions.answer_current_question!(q.correct_answer_key)).to be_falsey
+     expect(game_w_questions.answer_current_question!('d')).to be_falsey
+     expect(game_w_questions.status).to eq(:timeout)
    end
   end
 end
