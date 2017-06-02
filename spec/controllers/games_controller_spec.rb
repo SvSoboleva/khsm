@@ -27,16 +27,16 @@ RSpec.describe GamesController, type: :controller do
       expect(flash[:alert]).to be # во flash должен быть прописана ошибка
     end
 
-    it 'kick #create from #show ' do
+    it 'kick #create' do
       # вызываем экшен
-      post :create, id: game_w_questions.id
+      post :create
       # проверяем ответ
       expect(response.status).not_to eq(200) # статус не 200 ОК
       expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
       expect(flash[:alert]).to be # во flash должен быть прописана ошибка
     end
 
-    it 'kick #take_money from #show ' do
+    it 'kick #take_money' do
       # вызываем экшен
       put :take_money, id: game_w_questions.id
       # проверяем ответ
@@ -45,7 +45,7 @@ RSpec.describe GamesController, type: :controller do
       expect(flash[:alert]).to be # во flash должен быть прописана ошибка
     end
 
-    it 'kick #answer from #show ' do
+    it 'kick #answer' do
       # вызываем экшен
       put :answer, id: game_w_questions.id
       # проверяем ответ
@@ -101,12 +101,11 @@ RSpec.describe GamesController, type: :controller do
 
     it 'answers incorrect' do
       # передаем параметр params[:letter]
-      correct_key = game_w_questions.current_game_question.correct_answer_key
-      l = (['a', 'b', 'c', 'd'] - correct_key.scan(/\w/)).sample
-      put :answer, id: game_w_questions.id, letter: l
+      put :answer, id: game_w_questions.id, letter: 'a'
       game = assigns(:game)
 
       expect(game.finished?).to be_truthy
+      expect(game.status).to eq(:fail)
       expect(response).to redirect_to(user_path(user))
       expect(flash.empty?).to be_falsey
     end
