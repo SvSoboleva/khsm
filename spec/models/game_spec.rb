@@ -137,6 +137,7 @@ RSpec.describe Game, type: :model do
    it 'right answer' do
      level = game_w_questions.current_level
      expect(game_w_questions.answer_current_question!('d')).to be_truthy
+     game_w_questions.reload # перезагрузить объект из базы
      expect(game_w_questions.status).to eq(:in_progress)
      expect(game_w_questions.current_level).to eq(level + 1)
    end
