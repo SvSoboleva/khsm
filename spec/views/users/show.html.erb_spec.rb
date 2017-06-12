@@ -15,13 +15,12 @@ RSpec.describe 'users/show', type: :view do
   end
   # Проверяем, что шаблон выводит имя  игрока
   it 'renders player name' do
-
     expect(rendered).to match 'Мария'
   end
 
   # Проверяем, что шаблон выводит ссылку для смены пароля
   it 'renders possibility to change password' do
-
+    login_as user
     #current_user = user
 
     render
