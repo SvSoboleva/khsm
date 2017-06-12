@@ -96,16 +96,15 @@ RSpec.describe GameQuestion, type: :model do
     end
 
     it 'correct friend_call' do
-      FactoryGirl.create(:game_question, a: 2, b: 2, c: 2, d: 2)
       expect(game_question.help_hash).not_to include(:friend_call)
+      allow(GameHelpGenerator).to receive(:friend_call).and_return('Вариант A')
 
       game_question.add_friend_call
 
       expect(game_question.help_hash).to include(:friend_call)
 
       fc = game_question.help_hash[:friend_call]
-      expect(fc).to include('вариант')
-      expect(fc).to include('B')
+      expect(fc).to include('Вариант A')
     end
   end
 end
