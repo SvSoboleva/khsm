@@ -20,13 +20,12 @@ RSpec.describe 'users/show', type: :view do
 
   # Проверяем, что шаблон выводит ссылку для смены пароля
   it 'renders possibility to change password' do
-    login_as user
+    #login_as user
     #current_user = user
+    expect(rendered).to match 'Сменить имя и пароль'
 
-    render
    # assign(:current_user,  :user )
    # render 'users/show', object: :user, locals: :current_user
-    expect(rendered).to match 'Сменить имя и пароль'
   end
 
   it 'renders game fragments' do
