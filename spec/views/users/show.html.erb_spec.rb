@@ -14,25 +14,35 @@ RSpec.describe 'users/show', type: :view do
   end
 
   # Проверяем, что шаблон выводит ссылку для смены пароля только для current_user
-  it 'renders possibility to change password' do
-    expect(rendered).not_to match 'Сменить имя и пароль'
-    user = FactoryGirl.create(:user)
-    sign_in user
-    render
-    expect(rendered).to match 'Сменить имя и пароль'
+  context 'when user signed in' do
+    before do
+      user = FactoryGirl.create(:user)
+      sign_in user
+      render
+    end
+
+    it 'renders change password button' do
+      expect(rendered).to match 'Сменить имя и пароль'
+    end
   end
 
+  context 'when user not signed in' do
+    it 'does not render change password button' do
+      expect(rendered).not_to match 'Сменить имя и пароль'
+    end
+  end
+
+  #Проверяем вывод фрагментов с игрой
   it 'renders game fragments' do
-    #stub_template 'users/_game.html.erb' => 'User game goes here'
-    #render
-    #expect(rendered).to have_content 'User game goes here'
     user = FactoryGirl.create(:user)
     @games =[
-      FactoryGirl.create(:game,  user: user, current_level: 10, prize: 1000),
+      FactoryGirl.create(:game,  user: user, prize: 1000),
       FactoryGirl.create(:game,  user: user, prize: 2000)
     ]
     render
+    
     expect(rendered).to match '1 000 ₽'
+    expect(rendered).to match '2 000 ₽'
   end
 
 end
