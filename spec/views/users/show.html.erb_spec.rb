@@ -3,34 +3,36 @@ require 'rails_helper'
 # Тест на шаблон users/show.html.erb
 
 RSpec.describe 'users/show', type: :view do
-  # Перед каждым шагом мы пропишем в переменную @users пару пользователей
-  # как бы имитируя действие контроллера, который эти данные будет брать из базы
-  # Обратите внимание, что мы объекты в базу не кладем, т.к. пишем FactoryGirl.build_stubbed
+
   before(:each) do
-  assign(:user, FactoryGirl.build_stubbed(:user, id: 1, name: 'Мария', balance: 5000) )
-  #assign(:current_user, FactoryGirl.build_stubbed(:user, id: 1, name: 'Мария', balance: 5000) )
-  stub_template 'users/_game.html.erb' => 'User game goes here'
-  #assign(:current_user, :user)
-    render
+   assign(:user, FactoryGirl.build_stubbed(:user, id: 1, name: 'Мария', balance: 5000) )
+  render
   end
   # Проверяем, что шаблон выводит имя  игрока
   it 'renders player name' do
     expect(rendered).to match 'Мария'
   end
 
-  # Проверяем, что шаблон выводит ссылку для смены пароля
+  # Проверяем, что шаблон выводит ссылку для смены пароля только для current_user
   it 'renders possibility to change password' do
-    #login_as user
-    #current_user = user
+    expect(rendered).not_to match 'Сменить имя и пароль'
+    user = FactoryGirl.create(:user)
+    sign_in user
+    render
     expect(rendered).to match 'Сменить имя и пароль'
-
-   # assign(:current_user,  :user )
-   # render 'users/show', object: :user, locals: :current_user
   end
 
   it 'renders game fragments' do
-
-  expect(rendered).to have_content 'User game goes here'
+    #stub_template 'users/_game.html.erb' => 'User game goes here'
+    #render
+    #expect(rendered).to have_content 'User game goes here'
+    user = FactoryGirl.create(:user)
+    @games =[
+      FactoryGirl.create(:game,  user: user, current_level: 10, prize: 1000),
+      FactoryGirl.create(:game,  user: user, prize: 2000)
+    ]
+    render
+    expect(rendered).to match '1 000 ₽'
   end
 
 end
