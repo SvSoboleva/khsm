@@ -33,16 +33,23 @@ RSpec.describe 'users/show', type: :view do
   end
 
   #Проверяем вывод фрагментов с игрой
+  it 'renders game fragments if its not exists' do
+    user = FactoryGirl.create(:user)
+    render
+    stub_template 'users/_game.html.erb' => 'User game goes here'
+    expect(rendered).not_to have_content 'User game goes here'
+  end
+
+  #Проверяем вывод фрагментов с игрой
   it 'renders game fragments' do
     user = FactoryGirl.create(:user)
     @games =[
-      FactoryGirl.create(:game,  user: user, prize: 1000),
-      FactoryGirl.create(:game,  user: user, prize: 2000)
+        FactoryGirl.create(:game,  user: user, prize: 1000),
+        FactoryGirl.create(:game,  user: user, prize: 2000)
     ]
+    stub_template 'users/_game.html.erb' => 'User game goes here'
     render
-    
-    expect(rendered).to match '1 000 ₽'
-    expect(rendered).to match '2 000 ₽'
+    expect(rendered).to have_content 'User game goes here'
   end
 
 end
