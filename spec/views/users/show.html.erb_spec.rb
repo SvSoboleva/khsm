@@ -32,15 +32,15 @@ RSpec.describe 'users/show', type: :view do
     end
   end
 
-  #Проверяем вывод фрагментов с игрой
+  #Проверяем вывод фрагментов с игрой, пользователь не создал ни одной игры
   it 'renders game fragments if its not exists' do
     user = FactoryGirl.create(:user)
-    render
     stub_template 'users/_game.html.erb' => 'User game goes here'
+    render
     expect(rendered).not_to have_content 'User game goes here'
   end
 
-  #Проверяем вывод фрагментов с игрой
+  #Проверяем вывод фрагментов с игрой, игры есть
   it 'renders game fragments' do
     user = FactoryGirl.create(:user)
     @games =[
